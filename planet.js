@@ -5,11 +5,6 @@ Google Spreadsheet:
 https://spreadsheets.google.com/pub?key=0AvK94puaHj0CdEtLalVHU0llWEw4REFBcG5qZUJtUVE&hl=en_GB&single=true&gid=0&range=a2%3Aa9999
 
 
-CSV output:
-
-https://spreadsheets.google.com/pub?key=0AvK94puaHj0CdEtLalVHU0llWEw4REFBcG5qZUJtUVE&hl=en_GB&single=true&gid=0&range=a2%3Aa9999&output=csv
-
-
 YQL query:
 
 select * from feednormalizer where url in (select col0 from csv where url='https://spreadsheets.google.com/pub?key=0AvK94puaHj0CdEtLalVHU0llWEw4REFBcG5qZUJtUVE&hl=en_GB&single=true&gid=0&range=a2%3Aa9999&output=csv') and output='atom_1.0'
@@ -27,9 +22,14 @@ var url = "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20feedno
 // **
 
 // Tim filter: Remove script tags from HTML
-tim.filter("templateAfter", function(template){
-    return template.replace(/<[\0\t\n\v\f\r\s]*script[^>]*>[\s\S]*?<[\0\t\n\v\f\r\s]*\/[\0\t\n\v\f\r\s]*script[\0\t\n\v\f\r\s]*>/gim, "");
-});
+tim.filter("templateAfter", (function(){
+    var s = "[\\0\\t\\n\\v\\f\\r\\s]*", // whitespace characters
+        scriptRegex = new RegExp("<"+s+"script[^>]*>[\\s\\S]*?<"+s+"\\/"+s+"script"+s+">", "gi");
+        
+    return function(template){
+        return template.replace(scriptRegex, "");
+    };
+}()));
 
 // Pluck an object that contains a key and optional value
 function getBy(enumerable, findProperty, findValue){
@@ -53,14 +53,15 @@ function feedData(data){
     var feeds = data.query.results.feed,
         html = jQuery.map(feeds, function(feed){
             var articles = jQuery.map(feed.entry, function(entry){
-                var content = entry.content ? entry.content.content : entry.summary.content;
+                var content = (entry.content && entry.content.content) ||
+                    (entry.summary && entry.summary.content) || "";
                 
-                return tim("article", {
+                return {
                     title: entry.title,
                     content: content,
                     url: entry.link.href
-                });
-            }).join("");
+                };
+            });
             
             return tim("feed", {
                 title: feed.title,
