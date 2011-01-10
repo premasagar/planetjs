@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang=en>
+  <head>
+    <meta charset=utf-8>
+    <title>PlanetJS</title>
+  </head>
+
+  <body>
+    <section class=feeds></section>
+  
+    <!-- MICRO-TEMPLATES -->
+    <script type=text/tim class=feed>
+        <section>
+            <h1><a href="{{url}}">{{title}}</a></h1>
+            {{articles}}
+        </section>
+    </script>
+    
+    <script type=text/tim class=article>
+        <h1><a href="{{url}}">{{title}}</a></h1>
+        {{content}}
+    </script>
+    
+  
+    <!-- SCRIPTS -->
+    <script src="console.js"></script>
+    <script src="tim.js"></script>
+    <script src="getscript.js"></script>
+    <script src="jquery.js"></script>
+    <script src="planet.js"></script>
+  </body>
+</html>
