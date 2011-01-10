@@ -21,15 +21,18 @@ var url = "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20feedno
     
 // **
 
-// Tim filter: Remove script tags from HTML
-tim.filter("templateAfter", (function(){
+// Tim filters
+(function(){
     var s = "[\\0\\t\\n\\v\\f\\r\\s]*", // whitespace characters
-        scriptRegex = new RegExp("<"+s+"script[^>]*>[\\s\\S]*?<"+s+"\\/"+s+"script"+s+">", "gi");
-        
-    return function(template){
-        return template.replace(scriptRegex, "");
-    };
-}()));
+        scriptRegex = new RegExp("<"+s+"script[^>]*>[\\s\\S]*?<"+s+"\\/"+s+"script"+s+">", "gi"),
+        idRegex = new RegExp(s+"id"+s+"="+s+"['\"]?[^'\"\\b]*['\"]?", "gi");
+
+    tim.filter("templateAfter", function(template){
+        return template
+            .replace(scriptRegex, "") // Remove script tags
+            .replace(idRegex, ""); // Remove id attributes
+    });
+}());
 
 // Pluck an object that contains a key and optional value
 function getBy(enumerable, findProperty, findValue){
