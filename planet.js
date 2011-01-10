@@ -85,13 +85,12 @@ function feedData(data){
 var spreadsheetUrl = "https://spreadsheets.google.com/pub?key=0AvK94puaHj0CdEtLalVHU0llWEw4REFBcG5qZUJtUVE&hl=en_GB&single=true&gid=0&range=a2%3Aa9999&output=csv",
 
     yqlQuery = "select * from feednormalizer where url in (select col0 from csv where url='" + spreadsheetUrl + "') and output='atom_1.0'",
-
-    // Temporary local data
-    devUrl = "data.js",
     
     // Dom container
     feedsElem = jQuery("section.feeds");
 
-// Get the feed dataset
+// Get the feed dataset - uncomment the line below
 // yql(yqlQuery, "feedData");
-getScript(devUrl);
+
+// Temporary local data
+getScript("data.js");
