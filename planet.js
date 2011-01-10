@@ -8,16 +8,12 @@ https://spreadsheets.google.com/pub?key=0AvK94puaHj0CdEtLalVHU0llWEw4REFBcG5qZUJ
 YQL query:
 
 select * from feednormalizer where url in (select col0 from csv where url='https://spreadsheets.google.com/pub?key=0AvK94puaHj0CdEtLalVHU0llWEw4REFBcG5qZUJtUVE&hl=en_GB&single=true&gid=0&range=a2%3Aa9999&output=csv') and output='atom_1.0'
+
+
+YQL URL:
+
+http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20feednormalizer%20where%20url%20in%20(select%20col0%20from%20csv%20where%20url%3D'https%3A%2F%2Fspreadsheets.google.com%2Fpub%3Fkey%3D0AvK94puaHj0CdEtLalVHU0llWEw4REFBcG5qZUJtUVE%26hl%3Den_GB%26single%3Dtrue%26gid%3D0%26range%3Da2%253Aa9999%26output%3Dcsv%26foo')%20and%20output%3D'atom_1.0'&format=json&callback=feedData
 */
-
-
-var url = "http://query.yahooapis.com/v1/public/yql?q=select%20*%20from%20feednormalizer%20where%20url%20in%20(select%20col0%20from%20csv%20where%20url%3D'https%3A%2F%2Fspreadsheets.google.com%2Fpub%3Fkey%3D0AvK94puaHj0CdEtLalVHU0llWEw4REFBcG5qZUJtUVE%26hl%3Den_GB%26single%3Dtrue%26gid%3D0%26range%3Da2%253Aa9999%26output%3Dcsv%26foo')%20and%20output%3D'atom_1.0'&format=json&callback=feedData",
-
-    // Temporary local data
-    devUrl = "data.js",
-    
-    // Dom container
-    feedsElem = jQuery("section.feeds");
     
 // **
 
@@ -44,6 +40,14 @@ function getBy(enumerable, findProperty, findValue){
             }
         }
     });
+}
+
+function yqlUrl(query, callbackName){
+    return "http://query.yahooapis.com/v1/public/yql?q=" + encodeURIComponent(query) + "&format=json&callback=" + callbackName || "?";
+}
+
+function yql(query, callbackName){
+    getScript(yqlUrl(query, callbackName));
 }
 
 // **
@@ -76,5 +80,18 @@ function feedData(data){
     feedsElem.append(html);
 }
 
+// **
+
+var spreadsheetUrl = "https://spreadsheets.google.com/pub?key=0AvK94puaHj0CdEtLalVHU0llWEw4REFBcG5qZUJtUVE&hl=en_GB&single=true&gid=0&range=a2%3Aa9999&output=csv",
+
+    yqlQuery = "select * from feednormalizer where url in (select col0 from csv where url='" + spreadsheetUrl + "') and output='atom_1.0'",
+
+    // Temporary local data
+    devUrl = "data.js",
+    
+    // Dom container
+    feedsElem = jQuery("section.feeds");
+
 // Get the feed dataset
+// yql(yqlQuery, "feedData");
 getScript(devUrl);
