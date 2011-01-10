@@ -3,6 +3,7 @@
   <head>
     <meta charset=utf-8>
     <title>PlanetJS</title>
+    <link rel=stylesheet href=planet.css>
   </head>
 
   <body>
@@ -10,11 +11,13 @@
   
     <!-- MICRO-TEMPLATES -->
     <script type=text/tim class=feed>
-        <section>
+        <section class=feed>
             <h1><a href="{{url}}">{{title}}</a></h1>
             {{articles}}
+            <article>
                 <h1><a href="{{url}}">{{title}}</a></h1>
                 {{content}}
+            </article>
             {{/articles}}
         </section>
     </script>
